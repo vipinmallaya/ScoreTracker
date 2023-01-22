@@ -1,0 +1,373 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="ScoreTracker.Pages.GamePage"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    Title="Game"
+    xmlns:fontIcon="clr-namespace:ScoreTracker.Pages"
+    xmlns:viewModel="clr-namespace:ScoreTracker.ViewModel">
+    <ContentPage.Behaviors>
+        <toolkit:EventToCommandBehavior
+            EventName="Appearing"
+            Command="{Binding PageAppearingCommand}" />
+    </ContentPage.Behaviors>
+    <ContentPage.BindingContext>
+        <viewModel:GameViewModel />
+    </ContentPage.BindingContext>
+    <ContentPage.Content>
+        <Grid
+            ColumnDefinitions="*,*"
+            RowDefinitions="Auto,Auto,Auto,*"
+            HorizontalOptions="FillAndExpand"
+            VerticalOptions="FillAndExpand">
+
+            <Button
+                Text="Share"
+                Command="{Binding ShareScoreCommand}"
+                HorizontalOptions="End"
+                Grid.Row="0"
+                Grid.Column="1">
+                <Button.ImageSource>
+                    <FontImageSource
+                        FontFamily="FontIcons"
+                        Glyph="{x:Static fontIcon:FontIcons.Share}"
+                        Color="{AppThemeBinding Dark={StaticResource Black}, Light={StaticResource White}}"
+                        Size="14">
+
+                    </FontImageSource>
+                </Button.ImageSource>
+            </Button>
+
+            <Button
+                Text="Undo"
+                Command="{Binding UndoCommand}"
+                HorizontalOptions="Start"
+                Margin="0,0,10,0"
+                Grid.Row="0"
+                Grid.Column="0">
+                <Button.ImageSource>
+                    <FontImageSource
+                        FontFamily="FontIcons"
+                        Glyph="{x:Static fontIcon:FontIcons.Undo}"
+                        Color="{AppThemeBinding Dark={StaticResource Black}, Light={StaticResource White}}"
+                        Size="14">
+
+                    </FontImageSource>
+                </Button.ImageSource>
+            </Button>
+
+            <Button
+                Text="Switch Side"
+                Command="{Binding SwitchSideCommand}"
+                HorizontalOptions="Center"
+                Grid.Row="0"
+                Grid.Column="1">
+                <Button.ImageSource>
+                    <FontImageSource
+                        FontFamily="FontIcons"
+                        Glyph="{x:Static fontIcon:FontIcons.Swap}"
+                        Color="{AppThemeBinding Dark={StaticResource Black}, Light={StaticResource White}}"
+                        Size="18">
+
+                    </FontImageSource>
+                </Button.ImageSource>
+            </Button>
+
+            <!-- TODO::CONsider for next release -->
+            <!--<Label
+                Text="{Binding GameTime}"
+                FontSize="Small"
+                TextColor="Black"
+                HorizontalOptions="Center"
+                VerticalOptions="Center"
+                Grid.Row="0"
+                Grid.Column="0"
+                Grid.ColumnSpan="2">
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer
+                        Command="{Binding StartTimerCommand}"
+                        NumberOfTapsRequired="1" />
+                </Label.GestureRecognizers>
+            </Label>-->
+
+            <!-- Row 1-->
+            <Grid
+                RowDefinitions="*"
+                ColumnDefinitions="4*,1*"
+                Margin="10"
+                HorizontalOptions="FillAndExpand"
+                Grid.Row="1"
+                Grid.Column="0">
+                <Entry
+                    Placeholder="Away Team Name"
+                    HorizontalOptions="FillAndExpand"
+                    Text="{Binding Team1.Name}"
+                    ReturnCommand="{Binding Team1NameChangedCommand}"
+                    Grid.Column="0">
+                    <Entry.Behaviors>
+                        <toolkit:EventToCommandBehavior
+                            EventName="TextChanged"
+                            Command="{Binding Team1NameChangedCommand}" />
+                    </Entry.Behaviors>
+                </Entry>
+
+                <Label
+                    Text="Sr >>"
+                    TextColor="{Binding Team1.Color}"
+                    FontSize="Small"
+                    HorizontalOptions="End"
+                    Margin="20,0,10,0"
+                    HorizontalTextAlignment="End"
+                    IsVisible="{Binding Team1.Serve}"
+                    Grid.Column="1">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer
+                            NumberOfTapsRequired="1"
+                            Command="{Binding SetServeCommand}"
+                            CommandParameter="1" />
+                    </Label.GestureRecognizers>
+                </Label>
+
+            </Grid>
+            <Grid
+                RowDefinitions="*"
+                ColumnDefinitions="1*,4*"
+                Margin="10"
+                HorizontalOptions="FillAndExpand"
+                Grid.Row="1"
+                Grid.Column="1">
+                <Label
+                    TextColor="{Binding Team2.Color}"
+                    Text="&lt;&lt; Sr"
+                    Margin="10,0,20,0"
+                    FontSize="Small"
+                    HorizontalOptions="Start"
+                    HorizontalTextAlignment="Start"
+                    IsVisible="{Binding Team2.Serve}"
+                    Grid.Column="0"
+                    Grid.Row="0">
+
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer
+                            NumberOfTapsRequired="1"
+                            Command="{Binding SetServeCommand}"
+                            CommandParameter="2" />
+                    </Label.GestureRecognizers>
+                </Label>
+                <Entry
+                    Placeholder="Home Team Name"
+                    Text="{Binding Team2.Name}"
+                    HorizontalOptions="FillAndExpand"
+                    ReturnCommand="{Binding Team2NameChangedCommand}"
+                    Grid.Column="1"
+                    Grid.Row="0">
+                    <Entry.Behaviors>
+                        <toolkit:EventToCommandBehavior
+                            EventName="TextChanged"
+                            Command="{Binding Team2NameChangedCommand}" />
+                    </Entry.Behaviors>
+                </Entry>
+
+
+            </Grid>
+
+            <!-- Row 2-->
+            <StackLayout
+                Orientation="Vertical"
+                Margin="0"
+                Grid.Column="0"
+                Grid.Row="2"
+                HorizontalOptions="FillAndExpand"
+                VerticalOptions="FillAndExpand">
+                <Frame
+                    BorderColor="{Binding Team1.Color}"
+                    Margin="5"
+                    HorizontalOptions="FillAndExpand"
+                    VerticalOptions="FillAndExpand">
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer
+                            NumberOfTapsRequired="1"
+                            Command="{Binding PointCommand}"
+                            CommandParameter="1" />
+                    </Frame.GestureRecognizers>
+
+                    <Label
+                        Text="{Binding Team1.Point}"
+                        TextColor="{Binding Team1.Color}"
+                        FontAttributes="Bold"
+                        FontSize="Large"
+                        HorizontalTextAlignment="Center"
+                        HorizontalOptions="Center"
+                        VerticalOptions="Center" />
+                </Frame>
+
+                <StackLayout
+                    Orientation="Horizontal"
+                    Grid.Row="2"
+                    Grid.Column="0"
+                    HorizontalOptions="FillAndExpand"
+                    VerticalOptions="Fill">
+
+                    <Button
+                        Padding="6"
+                        Text="Break"
+                        IsVisible="{Binding BreakEnabled}"
+                        Command="{Binding BreakCommand}"
+                        CommandParameter="1"
+                        BackgroundColor="{Binding Team1.Color}"
+                        TextColor="{AppThemeBinding Dark={StaticResource White}, Light={StaticResource Black}}"
+                        HorizontalOptions="Start"
+                        VerticalOptions="Center">
+                        <Button.ImageSource>
+                            <FontImageSource
+                                FontFamily="FontIcons"
+                                Glyph="{x:Static fontIcon:FontIcons.Timer}"
+                                Color="{AppThemeBinding Dark={StaticResource White}, Light={StaticResource Black}}"
+                                Size="14">
+
+                            </FontImageSource>
+                        </Button.ImageSource>
+                    </Button>
+
+                    <Frame
+                        Padding="5"
+                        Margin="10"
+                        BorderColor="Grey"
+                        CornerRadius="0"
+                        VerticalOptions="Start"
+                        HorizontalOptions="EndAndExpand"
+                        Grid.Row="2"
+                        Grid.Column="0">
+                        <Label
+                            Text="{Binding Team1.SetCount}"
+                            Margin="8"
+                            HorizontalTextAlignment="Center"
+                            VerticalTextAlignment="Center"
+                            HorizontalOptions="Center"
+                            VerticalOptions="Center" />
+                    </Frame>
+
+
+
+                </StackLayout>
+            </StackLayout>
+            <StackLayout
+                Orientation="Vertical"
+                Margin="0"
+                Grid.Column="1"
+                Grid.Row="2"
+                HorizontalOptions="FillAndExpand"
+                VerticalOptions="FillAndExpand">
+                <Frame
+                    BorderColor="{Binding Team2.Color}"
+                    Margin="5"
+                    HorizontalOptions="FillAndExpand"
+                    VerticalOptions="FillAndExpand">
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer
+                            NumberOfTapsRequired="1"
+                            Command="{Binding PointCommand}"
+                            CommandParameter="2" />
+                    </Frame.GestureRecognizers>
+                    <Label
+                        Text="{Binding Team2.Point}"
+                        TextColor="{Binding Team2.Color}"
+                        FontAttributes="Bold"
+                        FontSize="Large"
+                        HorizontalTextAlignment="Center"
+                        HorizontalOptions="Center"
+                        VerticalOptions="Center" />
+                </Frame>
+
+                <StackLayout
+                    Orientation="Horizontal"
+                    Grid.Row="2"
+                    Grid.Column="1"
+                    HorizontalOptions="FillAndExpand"
+                    VerticalOptions="Fill">
+                    <Frame
+                        BorderColor="Grey"
+                        CornerRadius="0"
+                        Margin="10"
+                        Padding="5"
+                        VerticalOptions="Start"
+                        HorizontalOptions="Start">
+                        <Label
+                            Text="{Binding Team2.SetCount}"
+                            Margin="8"
+                            HorizontalTextAlignment="Center"
+                            VerticalTextAlignment="Center"
+                            HorizontalOptions="Center"
+                            VerticalOptions="Center" />
+                    </Frame>
+                    <Button
+                        Padding="6"
+                        Text="Break"
+                        IsVisible="{Binding BreakEnabled}"
+                        Command="{Binding BreakCommand}"
+                        CommandParameter="2"
+                        BackgroundColor="{Binding Team2.Color}"
+                        TextColor="{AppThemeBinding Dark={StaticResource White}, Light={StaticResource Black}}"
+                        HorizontalOptions="EndAndExpand"
+                        VerticalOptions="Center">
+                        <Button.ImageSource>
+                            <FontImageSource
+                                FontFamily="FontIcons" 
+                                Glyph="{x:Static fontIcon:FontIcons.Timer}"
+                                Color="{AppThemeBinding Dark={StaticResource White}, Light={StaticResource Black}}"
+                                Size="14">
+
+                            </FontImageSource>
+                        </Button.ImageSource>
+                    </Button>
+                </StackLayout>
+            </StackLayout>
+
+            <StackLayout
+                Orientation="Vertical"
+                Grid.Row="0"
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                Grid.RowSpan="4"
+                BackgroundColor="#00000080"
+                IsVisible="{Binding BreakOpted}"
+                HorizontalOptions="FillAndExpand"
+                VerticalOptions="CenterAndExpand"
+                InputTransparent="False">
+                <Frame
+                    IsClippedToBounds="True"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center"
+                    Padding="10,0,10,0"
+                    BackgroundColor="WhiteSmoke"
+                    BorderColor="WhiteSmoke">
+                    <StackLayout
+                        BackgroundColor="WhiteSmoke"
+                        Padding="15,0,15,0"
+                        Margin="0"
+                        InputTransparent="False">
+
+                        <Label
+                            Text="{Binding BreakTeam, StringFormat='Break For {0}'}"
+                            TextColor="Black"
+                            FontSize="Title"
+                            HorizontalOptions="CenterAndExpand"
+                            VerticalOptions="Center" />
+                        <Label
+                            Text="{Binding BreakTime}"
+                            TextColor="Black"
+                            FontSize="Title"
+                            HorizontalOptions="CenterAndExpand"
+                            VerticalOptions="Center" />
+
+                        <Button
+                            Text="Stop Break"
+                            Command="{Binding BreakCommand}"
+                            CommandParameter="-1" />
+                    </StackLayout>
+                </Frame>
+            </StackLayout>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

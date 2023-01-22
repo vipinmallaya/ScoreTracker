@@ -1,0 +1,12 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs
+/ScoreTracker/.vs
+/ScoreTracker/obj
+/ScoreTracker/bin/Debug/net6.0-windows10.0.19041.0/win10-x64
+/ScoreTracker/bin/Debug
+/Assets
+/ScoreTracker/bin/Release
+/Build

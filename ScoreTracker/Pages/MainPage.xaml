@@ -1,0 +1,141 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    x:Class="ScoreTracker.Pages.MainPage"
+    xmlns:viewmodel="clr-namespace:ScoreTracker.ViewModel"
+    xmlns:fontIcon="clr-namespace:ScoreTracker.Pages">
+    <ContentPage.Behaviors>
+        <toolkit:EventToCommandBehavior
+            EventName="Appearing"
+            Command="{Binding PageAppearingCommand}" />
+    </ContentPage.Behaviors>
+    <ContentPage.BindingContext>
+        <viewmodel:MainPageViewModel />
+    </ContentPage.BindingContext>
+
+    <Grid
+        RowDefinitions="*,Auto">
+        <CollectionView
+            x:Name="GamesCollection"
+            ItemsSource="{Binding Games}"
+            HorizontalOptions="FillAndExpand"
+            VerticalOptions="FillAndExpand"
+            SelectionMode="None"
+            ItemsLayout="VerticalGrid, 1"
+            ItemSizingStrategy="MeasureAllItems"
+            Margin="5">
+
+            <!-- This will not work as expected in android-->
+            <!-- ItemsLayout="{OnPlatform  Android='VerticalGrid, 1', iOS='VerticalGrid, 1', WinUI='VerticalGrid, 2' }"-->
+            <!--SelectedItem="{Binding SelectedGame}"
+            SelectionChangedCommand="{Binding GameSelectedCommand}"
+            SelectionChangedCommandParameter="{Binding SelectedGame}"-->
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <SwipeView
+                        Threshold="200">
+                        <SwipeView.RightItems>
+                            <SwipeItems>
+                                <SwipeItem
+                                    BackgroundColor="IndianRed"
+                                    Command="{Binding Source={x:Reference GamesCollection},Path=BindingContext.GameDeletedCommand}"
+                                    CommandParameter="{Binding .}">
+                                    <SwipeItem.IconImageSource>
+                                        <FontImageSource
+                                            FontFamily="FontIcons"
+                                            Glyph="{x:Static fontIcon:FontIcons.Delete}"
+                                            Color="{AppThemeBinding Dark={StaticResource Black}, Light={StaticResource White}}" />
+                                    </SwipeItem.IconImageSource>
+
+                                </SwipeItem>
+                            </SwipeItems>
+                        </SwipeView.RightItems>
+                        <Frame
+                            CornerRadius="5"
+                            Margin="5">
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer
+                                    NumberOfTapsRequired="1"
+                                    Command="{Binding Source={x:Reference GamesCollection},Path=BindingContext.GameSelectedCommand}"
+                                    CommandParameter="{Binding .}" />
+                            </Frame.GestureRecognizers>
+                            <Grid
+                                RowDefinitions="Auto,Auto,Auto"
+                                ColumnDefinitions="2*,*,2*">
+                                <Label
+                                    Text="{Binding StartTime, StringFormat='{0:dd MMM yyyy}'}"
+                                    FontSize="10"
+                                    HorizontalOptions="Start"
+                                    Grid.Row="0"
+                                    Grid.Column="0" />
+
+                                <Label
+                                    Text="{Binding StartTime, StringFormat='{0:HH mm}'}"
+                                    FontSize="10"
+                                    HorizontalOptions="End"
+                                    Grid.Row="0"
+                                    Grid.Column="2" />
+
+                                <!-- Row2-->
+                                <Label
+                                    Text="{Binding T1Name}"
+                                    TextColor="{Binding Team1Color}"
+                                    HorizontalTextAlignment="Center"
+                                    HorizontalOptions="Center"
+                                    FontSize="Medium"
+                                    Grid.Column="0"
+                                    Grid.Row="1" />
+                                <Label
+                                    Text="-vs-"
+                                    HorizontalTextAlignment="Center"
+                                    HorizontalOptions="Center"
+                                    VerticalOptions="Center"
+                                    Grid.Column="1"
+                                    Grid.Row="1" />
+                                <Label
+                                    Text="{Binding T2Name}"
+                                    TextColor="{Binding Team2Color}"
+                                    HorizontalTextAlignment="Center"
+                                    HorizontalOptions="Center"
+                                    FontSize="Medium"
+                                    Grid.Column="2"
+                                    Grid.Row="1" />
+
+                                <!-- Row3-->
+
+                                <Label
+                                    Text="{Binding T1SetCount}"
+                                    HorizontalOptions="Center"
+                                    Grid.Column="0"
+                                    Grid.Row="2" />
+                                
+                                <Label
+                                    Text="{Binding Status}"
+                                    HorizontalOptions="Center"
+                                    Grid.Column="1"
+                                    Grid.Row="2" />
+
+
+                                <Label
+                                    Text="{Binding T2SetCount}"
+                                    HorizontalOptions="Center"
+                                    Grid.Column="2"
+                                    Grid.Row="2" />
+                            </Grid>
+                        </Frame>
+
+                    </SwipeView>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+        <Button
+            Text="New Game"
+            Margin="20"
+            Command="{Binding StartNewGameCommand}"
+            HorizontalOptions="FillAndExpand"
+            VerticalOptions="End"
+            Grid.Row="1" />
+    </Grid>
+</ContentPage>
